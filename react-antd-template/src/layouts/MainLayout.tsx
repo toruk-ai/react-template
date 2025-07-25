@@ -70,9 +70,30 @@ const MainLayout: React.FC = () => {
     },
   ];
 
+  // 过滤有权限的菜单项
+  const filterMenusByPermission = (items: MenuItem[]): MenuItem[] => {
+    return items.filter((item) => {
+      // 如果菜单项没有权限要求，直接显示
+      if (!item.permissions || item.permissions.length === 0) {
+        return true;
+      }
+      
+      // 检查用户是否有所需权限
+      if (!user) return false;
+      
+      return item.permissions.some(permission => 
+        user.permissions.includes(permission)
+      );
+    }).map((item) => ({
+      ...item,
+      children: item.children ? filterMenusByPermission(item.children) : undefined,
+    }));
+  };
+
   // 转换为 Ant Design Menu 所需的格式
   const getMenuItems = (items: MenuItem[]): MenuProps['items'] => {
-    return items.map((item) => ({
+    const filteredItems = filterMenusByPermission(items);
+    return filteredItems.map((item) => ({
       key: item.key,
       icon: item.icon,
       label: item.label,

@@ -20,10 +20,6 @@ const PageLoading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 // 创建路由配置
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Navigate to="/dashboard" replace />,
-  },
-  {
     path: '/login',
     element: (
       <PageLoading>
@@ -39,8 +35,12 @@ export const router = createBrowserRouter([
       </PermissionRoute>
     ),
     children: [
-              {
-          path: 'dashboard',
+      {
+        index: true,
+        element: <Navigate to="/dashboard" replace />,
+      },
+      {
+        path: 'dashboard',
           element: (
             <PageLoading>
               <Dashboard />
