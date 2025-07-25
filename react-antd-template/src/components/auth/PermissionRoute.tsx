@@ -25,12 +25,26 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
 
   // 加载中状态
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '200px' 
+      }}>
+        Loading...
+      </div>
+    );
   }
 
   // 需要认证但未登录
   if (requireAuth && !isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // 如果不需要特定权限，直接渲染
+  if (!permissions && !roles) {
+    return <>{children}</>;
   }
 
   // 检查权限

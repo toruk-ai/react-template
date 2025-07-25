@@ -5,7 +5,7 @@ import { useDevice } from '../hooks';
 const { Title, Text } = Typography;
 
 const TestLayout: React.FC = () => {
-  const { isMobile, isTablet, isDesktop, screenWidth, screenHeight } = useDevice();
+  const { isMobile, isTablet, screenWidth, screenHeight } = useDevice();
 
   return (
     <div>
@@ -17,7 +17,7 @@ const TestLayout: React.FC = () => {
           <Space direction="vertical">
             <Text>屏幕尺寸: {screenWidth} x {screenHeight}</Text>
             <Text>设备类型: {isMobile ? '移动设备' : isTablet ? '平板设备' : '桌面设备'}</Text>
-            <Text>断点说明: 移动端 ≤576px, 平板 577-992px, 桌面 >992px</Text>
+            <Text>断点说明: 移动端 ≤576px, 平板 577-992px, 桌面 &gt;992px</Text>
           </Space>
         }
         type="info"

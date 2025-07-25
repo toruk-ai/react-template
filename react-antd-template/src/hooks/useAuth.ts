@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { User } from '../types';
 import { storage } from '../utils';
 
@@ -10,13 +10,6 @@ interface AuthState {
 }
 
 const useAuth = () => {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    token: storage.get('token'),
-    isAuthenticated: false,
-    loading: true,
-  });
-
   // 模拟用户数据
   const mockUser: User = {
     id: '1',
@@ -27,42 +20,24 @@ const useAuth = () => {
     permissions: ['user:read', 'user:create', 'user:update', 'user:delete', 'admin'],
   };
 
-  // 初始化认证状态
-  useEffect(() => {
-    const initAuth = async () => {
-      const token = storage.get('token');
-      if (token) {
-        // 模拟验证 token
-        try {
-          await new Promise(resolve => setTimeout(resolve, 500)); // 模拟网络延迟
-          setAuthState({
-            user: mockUser,
-            token,
-            isAuthenticated: true,
-            loading: false,
-          });
-        } catch (error) {
-          // Token 无效，清除本地存储
-          storage.remove('token');
-          setAuthState({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            loading: false,
-          });
-        }
-      } else {
-        setAuthState({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          loading: false,
-        });
-      }
+  const [authState, setAuthState] = useState<AuthState>(() => {
+    const token = storage.get('token');
+    // 如果有token，立即设置为已认证状态，避免闪烁
+    if (token) {
+      return {
+        user: mockUser, // 直接设置用户数据
+        token,
+        isAuthenticated: true,
+        loading: false, // 不需要loading状态
+      };
+    }
+    return {
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      loading: false,
     };
-
-    initAuth();
-  }, []);
+  });
 
   // 登录
   const login = useCallback(async (credentials: { username: string; password: string }) => {
