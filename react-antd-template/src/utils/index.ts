@@ -74,9 +74,9 @@ export const getDeviceInfo = () => {
   const height = window.innerHeight;
   
   return {
-    isMobile: width <= 768,
-    isTablet: width > 768 && width <= 1024,
-    isDesktop: width > 1024,
+    isMobile: width <= 576, // 修改为更小的断点，只有真正的手机才算移动设备
+    isTablet: width > 576 && width <= 992,
+    isDesktop: width > 992,
     screenWidth: width,
     screenHeight: height,
   };

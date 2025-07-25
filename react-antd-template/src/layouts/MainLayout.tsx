@@ -34,12 +34,18 @@ const MainLayout: React.FC = () => {
   const location = useLocation();
   const { t } = useTranslation();
   const { user, logout } = useAuth();
-  const { isMobile } = useDevice();
+  const { isMobile, isTablet } = useDevice();
 
-  // 移动端自动收起侧边栏
+  // 移动端和小平板自动收起侧边栏，桌面端默认展开
   useEffect(() => {
-    setCollapsed(isMobile);
-  }, [isMobile]);
+    if (isMobile) {
+      setCollapsed(true);
+    } else if (isTablet) {
+      setCollapsed(true); // 平板也收起，节省空间
+    } else {
+      setCollapsed(false); // 桌面端默认展开
+    }
+  }, [isMobile, isTablet]);
 
   // 模拟菜单数据
   const menuItems: MenuItem[] = [
@@ -48,6 +54,12 @@ const MainLayout: React.FC = () => {
       label: t('menu.dashboard'),
       icon: <DashboardOutlined />,
       path: '/dashboard',
+    },
+    {
+      key: 'test-layout',
+      label: '布局测试',
+      icon: <SettingOutlined />,
+      path: '/test-layout',
     },
     {
       key: 'user',
@@ -143,13 +155,17 @@ const MainLayout: React.FC = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        breakpoint="lg"
+        breakpoint="md"
         onBreakpoint={(broken) => {
-          if (broken) setCollapsed(true);
+          // 只在移动端断点时自动收起，避免在桌面端误触发
+          if (broken && window.innerWidth <= 576) {
+            setCollapsed(true);
+          }
         }}
         style={{
           background: token.colorBgContainer,
         }}
+        width={220} // 设置固定宽度，避免内容遮挡
       >
         <div
           style={{
@@ -215,11 +231,12 @@ const MainLayout: React.FC = () => {
         
         <Content
           style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
+            margin: isMobile ? '16px 8px' : '24px 16px',
+            padding: isMobile ? 16 : 24,
+            minHeight: 'calc(100vh - 112px)', // 确保内容区域高度合适
             background: token.colorBgContainer,
             borderRadius: token.borderRadiusLG,
+            overflow: 'auto', // 允许内容滚动
           }}
         >
           <Breadcrumb

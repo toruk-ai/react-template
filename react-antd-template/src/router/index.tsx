@@ -7,6 +7,7 @@ import Loading from '../components/common/Loading';
 // 懒加载页面组件
 const Login = React.lazy(() => import('../pages/Login'));
 const Dashboard = React.lazy(() => import('../pages/Dashboard'));
+const TestLayout = React.lazy(() => import('../pages/TestLayout'));
 const NotFound = React.lazy(() => import('../pages/NotFound'));
 
 // 页面加载组件
@@ -38,14 +39,22 @@ export const router = createBrowserRouter([
       </PermissionRoute>
     ),
     children: [
-      {
-        path: 'dashboard',
-        element: (
-          <PageLoading>
-            <Dashboard />
-          </PageLoading>
-        ),
-      },
+              {
+          path: 'dashboard',
+          element: (
+            <PageLoading>
+              <Dashboard />
+            </PageLoading>
+          ),
+        },
+        {
+          path: 'test-layout',
+          element: (
+            <PageLoading>
+              <TestLayout />
+            </PageLoading>
+          ),
+        },
       {
         path: 'users',
         element: (
